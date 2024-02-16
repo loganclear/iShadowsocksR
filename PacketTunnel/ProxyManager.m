@@ -78,7 +78,24 @@ void feedback_state(struct ssr_client_state *state, void *p) {
 }
 
 void info_callback(int dump_level, const char *info, void *p) {
-    DDLogWarn(@"%s", info);
+    switch (dump_level) {
+        case 1:
+            DDLogError(@"%s", info);
+            break;
+        case 2:
+            DDLogWarn(@"%s", info);
+            break;
+        case 3:
+            DDLogInfo(@"%s", info);
+            break;
+        case 4:
+            DDLogDebug(@"%s", info);
+            break;
+        default:
+            DDLogVerbose(@"%s", info);
+            break;
+    }
+    NSLog(@"%s", info);
 }
 
 void ssr_main_loop(Profile *profile, unsigned short listenPort, const char *appPath, void *context) {
@@ -96,7 +113,7 @@ void ssr_main_loop(Profile *profile, unsigned short listenPort, const char *appP
         config_ssrot_revision(config);
         
         set_app_name(appPath);
-        [DDLog addLogger:[DDASLLogger sharedInstance]]; // ASL = Apple System Logs
+        [DDLog addLogger:[DDOSLogger sharedInstance]]; // ASL = Apple System Logs
         set_dump_info_callback(&info_callback, context);
         ssr_run_loop_begin(config, &feedback_state, context);
         g_state = NULL;
@@ -150,6 +167,12 @@ void ssr_stop(void) {
             }
         }
         NSString *path = [file path];
+
+        NSLog(@"==== sfafasdfasdfasdf ====");
+        
+        [DDLog addLogger:[DDTTYLogger sharedInstance]];
+        // [DDLog setLevel:DDLogLevelAll forClass:[OverTlsWrapper class]];
+        // [OverTlsWrapper setLogCallback:&info_callback context:(__bridge void *)(self)];
 
         [OverTlsWrapper startWithConfig:path handler:shadowsocks_handler context:(__bridge void*)self];
         return;

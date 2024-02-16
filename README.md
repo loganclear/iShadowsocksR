@@ -91,7 +91,7 @@ Then open `iShadowsocksR.xcworkspace` with `Xcode` to Build and Run the project.
 
 - Due to an unknown reason at present, compiling Rust code from Xcode fails, so you have to manually compile it. Please run the following command in zsh (or bash):
     ```
-    cd overtls/overtls-rs
+    cd overtls
 
     cargo build --release --target aarch64-apple-ios
     cargo build --release --target x86_64-apple-ios
